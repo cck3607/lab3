@@ -1,37 +1,57 @@
-## Welcome to GitHub Pages
+## Cloud VPN Docker Project
 
-You can use the [editor on GitHub](https://github.com/cck3607/lab3/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Step 1. Open terminal with docker already installed and enter the code below. 
+```markdown
+mkdir -p ~/wireguard/
+mkdir -p ~/wireguard/config/
+nano ~/wireguard/docker-compose.yml
+```
+### Step 2. Now you should be in the nano edit for docker-compose.yml copy and past the contents below into the file. Once done press control x to save and exit.
 
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+version: '3.3'
+services:
+  wireguard:
+    container_name: wireguard
+    image: linuxserver/wireguard
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Hong_Kong
+      - SERVERURL=1.2.3.4
+      - SERVERPORT=51820
+      - PEERS=pc1,pc2,phone1
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=10.0.0.0
+    ports:
+      - 51820:51820/udp
+    volumes:
+      - type: bind
+        source: ./config/
+        target: /config/
+      - type: bind
+        source: /lib/modules
+        target: /lib/modules
+    restart: always
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+```
+## Step 3. Start wireguard by running the commands below. 
+```markdown
+sudo cd ~/wireguard/
+sudo docker-compose up -d
+```
+## Step 4. Connect wireguard to your phone by running the command below and scanning the qr code when it appears.
+```markdown
+sudo docker-compose logs -f wireguard
+```
+## Step 5. Open wireguard on your phone and turn on the VPN.
+## Step 6. Open files on your VM, and click the wireguard folder. Inside copy the config file to your laptop.
+## Step 7. Search the link below without your VPN turned on.
+```markdown
+https://ipleak.net/
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/cck3607/lab3/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
