@@ -54,4 +54,5 @@ sudo docker-compose logs -f wireguard
 ```markdown
 https://ipleak.net/
 ```
-
+## Step 8. In a new tab search the same link above with the VPN now turned on in wireguard.
+## Step 9. Screen shot both IPs running, should have different locations for both.
